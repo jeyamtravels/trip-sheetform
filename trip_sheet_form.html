@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Trip Sheet</title>
+  <style>
+    body{font-family:Arial,sans-serif;background:#f5f5f5;padding:20px}
+    .sheet{max-width:900px;margin:auto;background:#fff;border:2px solid #333;padding:20px}
+    h2{text-align:center;letter-spacing:2px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    td,th{border:1px solid #333;padding:8px;vertical-align:top}
+    label{font-weight:bold;display:block;margin-bottom:4px}
+    input,textarea{width:100%;border:none;outline:none;font-size:14px}
+    textarea{resize:none}
+    .small{font-size:12px}
+    .signature{height:60px}
+    .actions{margin-top:20px;display:flex;gap:10px}
+    button{flex:1;padding:10px;font-size:15px;border:none;border-radius:6px;cursor:pointer}
+    .submit{background:#1a73e8;color:#fff}
+    .print{background:#1d6f42;color:#fff}
+  </style>
+</head>
+<body>
+
+<div class="sheet" id="tripSheet">
+  <h2>TRIP SHEET</h2>
+
+  <table>
+    <tr>
+      <td><label>Service City</label><input id="serviceCity"></td>
+      <td><label>Organisation</label><input id="organisation"></td>
+      <td><label>Customer</label><input id="customer"></td>
+    </tr>
+    <tr>
+      <td><label>DS No.</label><input id="dsno"></td>
+      <td colspan="2"><label>Reporting Address</label><input id="reportAddress"></td>
+    </tr>
+  </table>
+
+  <br>
+
+  <table>
+    <tr>
+      <td><label>Starting Date</label><input type="date" id="startDate"></td>
+      <td><label>Starting Time</label><input type="time" id="startTime" oninput="calcHrs()"></td>
+      <td><label>Starting KM</label><input type="number" id="startKm" oninput="calcKm()"></td>
+    </tr>
+    <tr>
+      <td><label>Closing Date</label><input type="date" id="closeDate"></td>
+      <td><label>Closing Time</label><input type="time" id="closeTime" oninput="calcHrs()"></td>
+      <td><label>Closing KM</label><input type="number" id="closeKm" oninput="calcKm()"></td>
+    </tr>
+  </table>
+
+  <br>
+
+  <table>
+    <tr>
+      <td><label>Reporting Time</label><input type="time" id="reportTime"></td>
+      <td><label>Car Booked</label><input id="carBooked"></td>
+      <td><label>Car Allotted</label><input id="carAllotted"></td>
+    </tr>
+    <tr>
+      <td><label>Chauffeur</label><input id="driver"></td>
+      <td><label>Mobile No</label><input id="driverMobile"></td>
+      <td><label>Car No</label><input id="carNo"></td>
+    </tr>
+  </table>
+
+  <br>
+
+  <table>
+    <tr>
+      <td><label>Total Days</label><input id="totalDays"></td>
+      <td><label>Total Hrs</label><input id="totalHrs" readonly></td>
+      <td><label>Total KM</label><input id="totalKm" readonly></td>
+    </tr>
+  </table>
+
+  <br>
+
+  <table>
+    <tr>
+      <td style="width:50%"><label>Routing Details</label><textarea rows="4" id="route"></textarea></td>
+      <td style="width:50%"><label>Parking & Toll / Interstate Taxes</label><textarea rows="4" id="toll"></textarea></td>
+    </tr>
+  </table>
+
+  <br>
+
+  <table>
+    <tr>
+      <td class="small">Conditions as mentioned overleaf</td>
+      <td class="small">I confirm that I am responsible for full payment of this bill if not paid by the organisation.</td>
+    </tr>
+    <tr>
+      <td><label>Customer Signature</label><div class="signature"></div></td>
+      <td><label>Closing Signature</label><div class="signature"></div></td>
+    </tr>
+  </table>
+
+  <div class="actions">
+    <button class="submit" onclick="submitForm()">Submit</button>
+    <button class="print" onclick="printSheet()">Print</button>
+  </div>
+</div>
+
+<script>
+function calcKm(){
+  const s = Number(startKm.value) || 0;
+  const e = Number(closeKm.value) || 0;
+  totalKm.value = e >= s ? e - s : 0;
+}
+
+function calcHrs(){
+  const st = startTime.value;
+  const et = closeTime.value;
+  if(!st || !et) return;
+
+  const [sh, sm] = st.split(':').map(Number);
+  const [eh, em] = et.split(':').map(Number);
+
+  let start = sh * 60 + sm;
+  let end = eh * 60 + em;
+  if(end < start) end += 1440;
+
+  const diff = end - start;
+  totalHrs.value = `${Math.floor(diff / 60)}h ${diff % 60}m`;
+}
+
+function submitForm(){
+  const body = `Trip Sheet Details\n\n`
+  + `Service City: ${serviceCity.value}\n`
+  + `Organisation: ${organisation.value}\n`
+  + `Customer: ${customer.value}\n`
+  + `DS No: ${dsno.value}\n`
+  + `Reporting Address: ${reportAddress.value}\n\n`
+  + `Start Date: ${startDate.value}  Time: ${startTime.value}\n`
+  + `Close Date: ${closeDate.value}  Time: ${closeTime.value}\n`
+  + `Start KM: ${startKm.value}  Close KM: ${closeKm.value}\n`
+  + `Total KM: ${totalKm.value}\n`
+  + `Total Hrs: ${totalHrs.value}\n\n`
+  + `Driver: ${driver.value}\n`
+  + `Driver Mobile: ${driverMobile.value}\n`
+  + `Car No: ${carNo.value}`;
+
+  const mailto = `mailto:vidhyarajaraman1@gmail.com?subject=Trip Sheet Submission&body=${encodeURIComponent(body)}`;
+  window.location.href = mailto;
+}
+
+function printSheet(){
+  window.print();
+}
+</script>
+
+</body>
+</html>
