@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Trip Sheet</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
   <style>
     body{font-family:Arial,sans-serif;background:#f5f5f5;padding:20px}
     .sheet{max-width:900px;margin:auto;background:#fff;border:2px solid #333;padding:20px}
@@ -107,6 +109,13 @@
 </div>
 
 <script>
+  let guestPad, chauffuerPad;
+
+window.onload = () => {
+  guestPad = new SignaturePad(document.getElementById("guestSign"));
+ chauffuerPad= new SignaturePad(document.getElementById("chauffuerSign"));
+};
+
 function calcKm(){
   const s = Number(startKm.value) || 0;
   const e = Number(closeKm.value) || 0;
