@@ -1,166 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Trip Sheet</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
-  <style>
-    body{font-family:Arial,sans-serif;background:#f5f5f5;padding:20px}
-    .sheet{max-width:900px;margin:auto;background:#fff;border:2px solid #333;padding:20px}
-    h2{text-align:center;letter-spacing:2px}
-    table{width:100%;border-collapse:collapse;font-size:14px}
-    td,th{border:1px solid #333;padding:8px;vertical-align:top}
-    label{font-weight:bold;display:block;margin-bottom:4px}
-    input,textarea{width:100%;border:none;outline:none;font-size:14px}
-    textarea{resize:none}
-    .small{font-size:12px}
-    .signature{height:60px}
-    .actions{margin-top:20px;display:flex;gap:10px}
-    button{flex:1;padding:10px;font-size:15px;border:none;border-radius:6px;cursor:pointer}
-    .submit{background:#1a73e8;color:#fff}
-    .print{background:#1d6f42;color:#fff}
-  </style>
+<meta charset="UTF-8">
+<title>Trip Sheet</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- EmailJS -->
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+<!-- Signature Pad -->
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+
+<script>
+(function(){
+  emailjs.init("YOUR_PUBLIC_KEY");   // 🔴 REPLACE
+})();
+</script>
+
+<style>
+body{font-family:Arial;background:#f2f2f2;padding:15px}
+.sheet{max-width:900px;margin:auto;background:#fff;border:2px solid #333;padding:15px}
+h2{text-align:center;letter-spacing:2px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td{border:1px solid #333;padding:6px;vertical-align:top}
+label{font-weight:bold;display:block;margin-bottom:4px}
+input,textarea{width:100%;border:none;outline:none;font-size:14px}
+textarea{resize:none}
+canvas{border:1px solid #333;width:100%;height:120px}
+.actions{margin-top:15px;display:flex;gap:10px}
+button{flex:1;padding:10px;font-size:15px;border:none;border-radius:5px;cursor:pointer}
+.submit{background:#1a73e8;color:#fff}
+.print{background:#1d6f42;color:#fff}
+.clear{margin-top:5px;background:#ccc;padding:5px;border:none;width:100%}
+
+@media print{
+  body{background:#fff}
+  .actions,.clear{display:none}
+}
+</style>
 </head>
+
 <body>
 
-<div class="sheet" id="tripSheet">
-  <h2>TRIP SHEET</h2>
+<div class="sheet">
+<h2>TRIP SHEET</h2>
 
-  <table>
-    <tr>
-      <td><label>Service City</label><input id="serviceCity"></td>
-      <td><label>Organisation</label><input id="organisation"></td>
-      <td><label>DS No.</label><input id="dsno"></td>
-       <td><label>Booking Id</label><input id="bookingid"></td>
-    </tr>
-    <tr>
-      <td><label>GuestName</label><input id="guestname"></td>
-      <td colspan="2"><label>Reporting Address</label><input id="reportAddress"></td>
-    </tr>
-  </table>
+<table>
+<tr>
+<td><label>Service City</label><input id="serviceCity"></td>
+<td><label>Organisation</label><input id="organisation"></td>
+<td><label>DS.NO</label><input id="dsno"></td>
+<td><label>BookingId</label><input id="bookingid"></td>
+</tr>
+<tr>
+<td><label>GuestName</label><input id="guestname"></td>
+<td colspan="2"><label>Reporting Address</label><input id="reportAddress"></td>
+</tr>
+<tr>
+<td><label>Start Date</label><input type="date" id="startDate" oninput="calcHrs()"></td>
+<td><label>Start Time</label><input type="time" id="startTime" oninput="calcHrs()"></td>
+<td><label>Start KM</label><input type="number" id="startKm" oninput="calcKm()"></td>
+</tr>
 
-  <br>
+<tr>
+<td><label>Close Date</label><input type="date" id="closeDate" oninput="calcHrs()"></td>
+<td><label>Close Time</label><input type="time" id="closeTime" oninput="calcHrs()"></td>
+<td><label>Close KM</label><input type="number" id="closeKm" oninput="calcKm()"></td>
+</tr>
 
-  <table>
-    <tr>
-      <td><label>Starting Date</label><input type="date" id="startDate"></td>
-      <td><label>Starting Time</label><input type="time" id="startTime" oninput="calcHrs()"></td>
-      <td><label>Starting KM</label><input type="number" id="startKm" oninput="calcKm()"></td>
-    </tr>
-    <tr>
-      <td><label>Closing Date</label><input type="date" id="closeDate"></td>
-      <td><label>Closing Time</label><input type="time" id="closeTime" oninput="calcHrs()"></td>
-      <td><label>Closing KM</label><input type="number" id="closeKm" oninput="calcKm()"></td>
-    </tr>
-  </table>
+<tr>
+<td><label>Total Days</label><input id="totalDays" readonly></td>
+<td><label>Total Hours</label><input id="totalHrs" readonly></td>
+<td><label>Total KM</label><input id="totalKm" readonly></td>
+</tr>
 
-  <br>
+<tr>
+<td><label>Driver Name</label><input id="driver"></td>
+<td><label>Driver Mobile</label><input id="driverMobile"></td>
+<td><label>Car No</label><input id="carNo"></td>
+</tr>
 
-  <table>
-    <tr>
-      <td><label>Reporting Time</label><input type="time" id="reportTime"></td>
-      <td><label>Car Booked</label><input id="carBooked"></td>
-      <td><label>Car Allotted</label><input id="carAllotted"></td>
-    </tr>
-    <tr>
-      <td><label>Chauffeur</label><input id="driver"></td>
-      <td><label>Mobile No</label><input id="driverMobile"></td>
-      <td><label>Car No</label><input id="carNo"></td>
-    </tr>
-  </table>
+<tr>
+<td colspan="3"><label>Routing Details</label><textarea rows="2" id="route"></textarea></td>
+</tr>
 
-  <br>
+<tr>
+<td colspan="3"><label>Toll / Parking</label><textarea rows="2" id="toll"></textarea></td>
+</tr>
 
-  <table>
-    <tr>
-      <td><label>Total Days</label><input id="totalDays"></td>
-      <td><label>Total Hrs</label><input id="totalHrs" readonly></td>
-      <td><label>Total KM</label><input id="totalKm" readonly></td>
-    </tr>
-  </table>
+<tr>
+<td>
+<label>Guest Signature</label>
+<canvas id="custSign"></canvas>
+<button type="button" class="clear" onclick="custPad.clear()">Clear</button>
+</td>
 
-  <br>
+<td colspan="2">
+<label>Chauffeur Signature</label>
+<canvas id="driverSign"></canvas>
+<button type="button" class="clear" onclick="driverPad.clear()">Clear</button>
+</td>
+</tr>
+</table>
 
-  <table>
-    <tr>
-      <td style="width:50%"><label>Routing Details</label><textarea rows="4" id="route"></textarea></td>
-      <td style="width:50%"><label>Parking & Toll / Interstate Taxes</label><textarea rows="4" id="toll"></textarea></td>
-    </tr>
-  </table>
+<div class="actions">
+<button class="submit" onclick="sendEmail()">Submit</button>
+<button class="print" onclick="window.print()">Print</button>
+</div>
 
-  <br>
-
-  <table>
-    <tr>
-      <td class="small">Conditions as mentioned overleaf</td>
-      <td class="small">I confirm that I am responsible for full payment of this bill if not paid by the organisation.</td>
-    </tr>
-    <tr>
-      <td><label>Guest Signature</label><div class="signature"></div></td>
-      <td><label>Chauffeur Signature</label><div class="signature"></div></td>
-    </tr>
-  </table>
-
-  <div class="actions">
-    <button class="submit" onclick="submitForm()">Submit</button>
-    <button class="print" onclick="printSheet()">Print</button>
-  </div>
 </div>
 
 <script>
-  let guestPad, chauffuerPad;
+let custPad, driverPad;
 
 window.onload = () => {
-  guestPad = new SignaturePad(document.getElementById("guestSign"));
- chauffuerPad= new SignaturePad(document.getElementById("chauffuerSign"));
+  custPad = new SignaturePad(document.getElementById("custSign"));
+  driverPad = new SignaturePad(document.getElementById("driverSign"));
 };
 
 function calcKm(){
-  const s = Number(startKm.value) || 0;
-  const e = Number(closeKm.value) || 0;
-  totalKm.value = e >= s ? e - s : 0;
+  const s = Number(startKm.value)||0;
+  const e = Number(closeKm.value)||0;
+  totalKm.value = e>=s ? e-s : 0;
 }
 
 function calcHrs(){
-  const st = startTime.value;
-  const et = closeTime.value;
-  if(!st || !et) return;
-
-  const [sh, sm] = st.split(':').map(Number);
-  const [eh, em] = et.split(':').map(Number);
-
-  let start = sh * 60 + sm;
-  let end = eh * 60 + em;
-  if(end < start) end += 1440;
-
-  const diff = end - start;
-  totalHrs.value = `${Math.floor(diff / 60)}h ${diff % 60}m`;
+  if(!startDate.value||!closeDate.value||!startTime.value||!closeTime.value)return;
+  const s = new Date(startDate.value+"T"+startTime.value);
+  const e = new Date(closeDate.value+"T"+closeTime.value);
+  const d = e - s;
+  const mins = Math.floor(d/60000);
+  totalHrs.value = Math.floor(mins/60)+"h "+(mins%60)+"m";
+  totalDays.value = Math.ceil(d/86400000);
 }
 
-function submitForm(){
-  const body = `Trip Sheet Details\n\n`
-  + `Service City: ${serviceCity.value}\n`
-  + `Organisation: ${organisation.value}\n`
-  + `Customer: ${customer.value}\n`
-  + `DS No: ${dsno.value}\n`
-  + `Reporting Address: ${reportAddress.value}\n\n`
-  + `Start Date: ${startDate.value}  Time: ${startTime.value}\n`
-  + `Close Date: ${closeDate.value}  Time: ${closeTime.value}\n`
-  + `Start KM: ${startKm.value}  Close KM: ${closeKm.value}\n`
-  + `Total KM: ${totalKm.value}\n`
-  + `Total Hrs: ${totalHrs.value}\n\n`
-  + `Driver: ${driver.value}\n`
-  + `Driver Mobile: ${driverMobile.value}\n`
-  + `Car No: ${carNo.value}`;
+function sendEmail(){
+  if(custPad.isEmpty() || driverPad.isEmpty()){
+    alert("Please sign both Customer & Driver signatures");
+    return;
+  }
 
-  const mailto = `mailto:info.jeyamtravels@gmail.com?subject=Trip Sheet Submission&body=${encodeURIComponent(body)}`;
-  window.location.href ="mailto:info.jeyamtravels@gmail.com?...";
-
-}
-
-function printSheet(){
-  window.print();
+  emailjs.send("YOUR_SERVICE_ID","YOUR_TEMPLATE_ID",{
+    serviceCity: serviceCity.value,
+    organisation: organisation.value,
+    customer: customer.value,
+    startDate: startDate.value,
+    startTime: startTime.value,
+    closeDate: closeDate.value,
+    closeTime: closeTime.value,
+    startKm: startKm.value,
+    closeKm: closeKm.value,
+    totalKm: totalKm.value,
+    totalHrs: totalHrs.value,
+    totalDays: totalDays.value,
+    driver: driver.value,
+    driverMobile: driverMobile.value,
+    carNo: carNo.value,
+    route: route.value,
+    toll: toll.value,
+    custSign: custPad.toDataURL(),
+    driverSign: driverPad.toDataURL()
+  })
+  .then(()=>{
+    alert("Trip Sheet sent to Gmail with signature ✅");
+  },err=>{
+    alert("Failed ❌ "+err.text);
+  });
 }
 </script>
 
