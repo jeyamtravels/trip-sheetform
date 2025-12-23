@@ -5,37 +5,70 @@
 <title>Trip Sheet</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- EmailJS -->
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-
-<!-- Signature Pad -->
-<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
-
-<script>
-(function(){
-  emailjs.init("YOUR_PUBLIC_KEY");   // 🔴 REPLACE
-})();
-</script>
-
 <style>
-body{font-family:Arial;background:#f2f2f2;padding:15px}
-.sheet{max-width:900px;margin:auto;background:#fff;border:2px solid #333;padding:15px}
-h2{text-align:center;letter-spacing:2px}
-table{width:100%;border-collapse:collapse;font-size:14px}
-td{border:1px solid #333;padding:6px;vertical-align:top}
-label{font-weight:bold;display:block;margin-bottom:4px}
-input,textarea{width:100%;border:none;outline:none;font-size:14px}
-textarea{resize:none}
-canvas{border:1px solid #333;width:100%;height:120px}
-.actions{margin-top:15px;display:flex;gap:10px}
-button{flex:1;padding:10px;font-size:15px;border:none;border-radius:5px;cursor:pointer}
-.submit{background:#1a73e8;color:#fff}
-.print{background:#1d6f42;color:#fff}
-.clear{margin-top:5px;background:#ccc;padding:5px;border:none;width:100%}
+body{
+  font-family: Arial, sans-serif;
+  background:#f2f2f2;
+  padding:10px;
+}
+.sheet{
+  max-width:900px;
+  margin:auto;
+  background:#fff;
+  border:2px solid #000;
+  padding:10px;
+}
+h2{
+  text-align:center;
+  letter-spacing:2px;
+  margin:5px 0 10px;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:13px;
+}
+td{
+  border:1px solid #000;
+  padding:5px;
+  vertical-align:top;
+}
+label{
+  font-weight:bold;
+  font-size:12px;
+  display:block;
+}
+input, textarea{
+  width:100%;
+  border:none;
+  outline:none;
+  font-size:13px;
+}
+textarea{ resize:none; }
 
+/* fixed widths */
+.w-small{width:120px;}
+.w-medium{width:160px;}
+.w-large{width:260px;}
+
+/* signature */
+canvas{
+  border:1px solid #000;
+  width:100%;
+  height:80px;
+  touch-action:none;
+}
+.clear{
+  font-size:11px;
+  color:blue;
+  cursor:pointer;
+  margin-top:3px;
+}
+
+/* print */
 @media print{
-  body{background:#fff}
-  .actions,.clear{display:none}
+  body{background:#fff;}
+  button{display:none;}
 }
 </style>
 </head>
@@ -45,127 +78,161 @@ button{flex:1;padding:10px;font-size:15px;border:none;border-radius:5px;cursor:p
 <div class="sheet">
 <h2>TRIP SHEET</h2>
 
+<!-- HEADER -->
 <table>
 <tr>
-<td><label>Service City</label><input id="serviceCity"></td>
-<td><label>Organisation</label><input id="organisation"></td>
-<td><label>DS.NO</label><input id="dsno"></td>
-<td><label>BookingId</label><input id="bookingid"></td>
+  <td class="w-medium"><label>Service City</label><input></td>
+  <td class="w-large"><label>Organisation</label><input></td>
+  <td><label>Guest Name</label><input></td>
 </tr>
 <tr>
-<td><label>GuestName</label><input id="guestname"></td>
-<td colspan="2"><label>Reporting Address</label><input id="reportAddress"></td>
-</tr>
-<tr>
-<td><label>Start Date</label><input type="date" id="startDate" oninput="calcHrs()"></td>
-<td><label>Start Time</label><input type="time" id="startTime" oninput="calcHrs()"></td>
-<td><label>Start KM</label><input type="number" id="startKm" oninput="calcKm()"></td>
-</tr>
-
-<tr>
-<td><label>Close Date</label><input type="date" id="closeDate" oninput="calcHrs()"></td>
-<td><label>Close Time</label><input type="time" id="closeTime" oninput="calcHrs()"></td>
-<td><label>Close KM</label><input type="number" id="closeKm" oninput="calcKm()"></td>
-</tr>
-
-<tr>
-<td><label>Total Days</label><input id="totalDays" readonly></td>
-<td><label>Total Hours</label><input id="totalHrs" readonly></td>
-<td><label>Total KM</label><input id="totalKm" readonly></td>
-</tr>
-
-<tr>
-<td><label>Driver Name</label><input id="driver"></td>
-<td><label>Driver Mobile</label><input id="driverMobile"></td>
-<td><label>Car No</label><input id="carNo"></td>
-</tr>
-
-<tr>
-<td colspan="3"><label>Routing Details</label><textarea rows="2" id="route"></textarea></td>
-</tr>
-
-<tr>
-<td colspan="3"><label>Toll / Parking</label><textarea rows="2" id="toll"></textarea></td>
-</tr>
-
-<tr>
-<td>
-<label>Guest Signature</label>
-<canvas id="custSign"></canvas>
-<button type="button" class="clear" onclick="custPad.clear()">Clear</button>
-</td>
-
-<td colspan="2">
-<label>Chauffeur Signature</label>
-<canvas id="driverSign"></canvas>
-<button type="button" class="clear" onclick="driverPad.clear()">Clear</button>
-</td>
+  <td class="w-small"><label>DS No</label><input></td>
+  <td class="w-small"><label>Booking ID</label><input></td>
+  <td><label>Reporting Address</label><input></td>
 </tr>
 </table>
 
-<div class="actions">
-<button class="submit" onclick="sendEmail()">Submit</button>
-<button class="print" onclick="window.print()">Print</button>
-</div>
+<!-- START / CLOSE -->
+<table>
+<tr>
+  <td class="w-small"><label>Starting Date</label><input type="date"></td>
+  <td class="w-small"><label>Starting Time</label><input type="time" id="startTime" oninput="calcHrs()"></td>
+  <td class="w-small"><label>Starting KM</label><input type="number" id="startKm" oninput="calcKm()"></td>
+</tr>
+<tr>
+  <td class="w-small"><label>Closing Date</label><input type="date"></td>
+  <td class="w-small"><label>Closing Time</label><input type="time" id="closeTime" oninput="calcHrs()"></td>
+  <td class="w-small"><label>Closing KM</label><input type="number" id="closeKm" oninput="calcKm()"></td>
+</tr>
+</table>
+
+<!-- VEHICLE -->
+<table>
+<tr>
+  <td><label>Reporting Time</label><input type="time"></td>
+  <td><label>Car Booked</label><input></td>
+  <td><label>Car Allotted</label><input></td>
+</tr>
+<tr>
+  <td><label>Chauffeur Name</label><input></td>
+  <td><label>Mobile No</label><input></td>
+  <td><label>Car No</label><input></td>
+</tr>
+</table>
+
+<!-- TOTAL -->
+<table>
+<tr>
+  <td><label>Total Days</label><input></td>
+  <td><label>Total Hrs</label><input id="totalHrs" readonly></td>
+  <td><label>Total KM</label><input id="totalKm" readonly></td>
+</tr>
+</table>
+
+<!-- ROUTE -->
+<table>
+<tr>
+  <td><label>Routing Details</label><textarea rows="3"></textarea></td>
+  <td><label>Parking & Toll / Interstate Taxes</label><textarea rows="3"></textarea></td>
+</tr>
+</table>
+
+<!-- SIGNATURES -->
+<table>
+<tr>
+  <td width="50%">
+    <label>Guest Signature (Type or Draw)</label>
+    <input placeholder="Type Guest Name">
+    <div style="text-align:center;font-size:11px">OR</div>
+    <canvas id="guestSign"></canvas>
+    <div class="clear" onclick="clearCanvas('guestSign')">Clear Signature</div>
+  </td>
+
+  <td width="50%">
+    <label>Chauffeur Signature (Type or Draw)</label>
+    <input placeholder="Type Chauffeur Name">
+    <div style="text-align:center;font-size:11px">OR</div>
+    <canvas id="driverSign"></canvas>
+    <div class="clear" onclick="clearCanvas('driverSign')">Clear Signature</div>
+  </td>
+</tr>
+</table>
+
+<p style="font-size:11px;margin-top:5px">
+I confirm that I am responsible for full payment of this bill if not paid by the organisation.
+</p>
+
+<button onclick="window.print()" style="width:100%;padding:8px;margin-top:10px">
+Print Trip Sheet
+</button>
 
 </div>
 
 <script>
-let custPad, driverPad;
-
-window.onload = () => {
-  custPad = new SignaturePad(document.getElementById("custSign"));
-  driverPad = new SignaturePad(document.getElementById("driverSign"));
-};
-
 function calcKm(){
-  const s = Number(startKm.value)||0;
-  const e = Number(closeKm.value)||0;
-  totalKm.value = e>=s ? e-s : 0;
+  let s=Number(startKm.value)||0;
+  let e=Number(closeKm.value)||0;
+  totalKm.value=e>=s?e-s:0;
 }
 
 function calcHrs(){
-  if(!startDate.value||!closeDate.value||!startTime.value||!closeTime.value)return;
-  const s = new Date(startDate.value+"T"+startTime.value);
-  const e = new Date(closeDate.value+"T"+closeTime.value);
-  const d = e - s;
-  const mins = Math.floor(d/60000);
-  totalHrs.value = Math.floor(mins/60)+"h "+(mins%60)+"m";
-  totalDays.value = Math.ceil(d/86400000);
+  if(!startTime.value||!closeTime.value) return;
+  let [sh,sm]=startTime.value.split(':').map(Number);
+  let [eh,em]=closeTime.value.split(':').map(Number);
+  let start=sh*60+sm,end=eh*60+em;
+  if(end<start) end+=1440;
+  let diff=end-start;
+  totalHrs.value=Math.floor(diff/60)+"h "+(diff%60)+"m";
 }
 
-function sendEmail(){
-  if(custPad.isEmpty() || driverPad.isEmpty()){
-    alert("Please sign both Customer & Driver signatures");
-    return;
+/* DRAW SIGNATURE (MOUSE + TOUCH) */
+function initSign(id){
+  const canvas=document.getElementById(id);
+  const ctx=canvas.getContext("2d");
+  let drawing=false;
+
+  function getPos(e){
+    const r=canvas.getBoundingClientRect();
+    if(e.touches){
+      return {x:e.touches[0].clientX-r.left,y:e.touches[0].clientY-r.top};
+    }
+    return {x:e.clientX-r.left,y:e.clientY-r.top};
   }
 
-  emailjs.send("YOUR_SERVICE_ID","YOUR_TEMPLATE_ID",{
-    serviceCity: serviceCity.value,
-    organisation: organisation.value,
-    customer: customer.value,
-    startDate: startDate.value,
-    startTime: startTime.value,
-    closeDate: closeDate.value,
-    closeTime: closeTime.value,
-    startKm: startKm.value,
-    closeKm: closeKm.value,
-    totalKm: totalKm.value,
-    totalHrs: totalHrs.value,
-    totalDays: totalDays.value,
-    driver: driver.value,
-    driverMobile: driverMobile.value,
-    carNo: carNo.value,
-    route: route.value,
-    toll: toll.value,
-    custSign: custPad.toDataURL(),
-    driverSign: driverPad.toDataURL()
-  })
-  .then(()=>{
-    alert("Trip Sheet sent to Gmail with signature ✅");
-  },err=>{
-    alert("Failed ❌ "+err.text);
-  });
+  function start(e){
+    drawing=true;
+    const p=getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(p.x,p.y);
+  }
+
+  function draw(e){
+    if(!drawing) return;
+    const p=getPos(e);
+    ctx.lineWidth=2;
+    ctx.lineCap="round";
+    ctx.lineTo(p.x,p.y);
+    ctx.stroke();
+  }
+
+  function stop(){ drawing=false; }
+
+  canvas.addEventListener("mousedown",start);
+  canvas.addEventListener("mousemove",draw);
+  canvas.addEventListener("mouseup",stop);
+  canvas.addEventListener("mouseleave",stop);
+
+  canvas.addEventListener("touchstart",start);
+  canvas.addEventListener("touchmove",e=>{e.preventDefault();draw(e);});
+  canvas.addEventListener("touchend",stop);
+}
+
+initSign("guestSign");
+initSign("driverSign");
+
+function clearCanvas(id){
+  const c=document.getElementById(id);
+  c.getContext("2d").clearRect(0,0,c.width,c.height);
 }
 </script>
 
