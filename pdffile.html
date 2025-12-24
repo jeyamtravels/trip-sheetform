@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -165,7 +166,13 @@ I confirm that I am responsible for full payment of this bill if not paid by the
 <button onclick="window.print()" style="width:100%;padding:8px;margin-top:10px">
 Print Trip Sheet
 </button>
+<button onclick="savePDF()" style="width:100%;padding:8px;margin-top:10px">
+Save pdf
+</button>
+</button>
+<div id="pdfLink" style="margin-top:10px;font-size:13px;"></div>
 
+</div>
 </div>
 
 <script>
@@ -233,6 +240,19 @@ initSign("driverSign");
 function clearCanvas(id){
   const c=document.getElementById(id);
   c.getContext("2d").clearRect(0,0,c.width,c.height);
+}
+/* CREATE PDF + LINK */
+function savePDF(){
+  const sheet=document.querySelector(".sheet");
+
+  html2pdf().from(sheet).outputPdf('blob').then(blob=>{
+    const url=URL.createObjectURL(blob);
+    document.getElementById("pdfLink").innerHTML=`
+      <b>PDF Link Created:</b><br>
+      <a href="${url}" target="_blank">Open Signed Trip Sheet</a><br>
+      <a href="${url}" download="Trip_Sheet.pdf">Download PDF</a>
+    `;
+  });
 }
 </script>
 
