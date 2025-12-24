@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,17 +6,70 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body{font-family:Arial,sans-serif;background:#f2f2f2;padding:10px;}
-.sheet{max-width:900px;margin:auto;background:#fff;border:2px solid #000;padding:10px;}
-h2{text-align:center;letter-spacing:2px;margin:5px 0 10px;}
-table{width:100%;border-collapse:collapse;font-size:13px;}
-td{border:1px solid #000;padding:5px;}
-label{font-weight:bold;font-size:12px;display:block;}
-input,textarea{width:100%;border:none;outline:none;font-size:13px;}
-textarea{resize:none;}
-canvas{border:1px solid #000;width:100%;height:80px;touch-action:none;}
-.clear{font-size:11px;color:blue;cursor:pointer;}
-@media print{button,#pdfLink{display:none;}}
+body{
+  font-family: Arial, sans-serif;
+  background:#f2f2f2;
+  padding:10px;
+}
+.sheet{
+  max-width:900px;
+  margin:auto;
+  background:#fff;
+  border:2px solid #000;
+  padding:10px;
+}
+h2{
+  text-align:center;
+  letter-spacing:2px;
+  margin:5px 0 10px;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:13px;
+}
+td{
+  border:1px solid #000;
+  padding:5px;
+  vertical-align:top;
+}
+label{
+  font-weight:bold;
+  font-size:12px;
+  display:block;
+}
+input, textarea{
+  width:100%;
+  border:none;
+  outline:none;
+  font-size:13px;
+}
+textarea{ resize:none; }
+
+/* fixed widths */
+.w-small{width:120px;}
+.w-medium{width:160px;}
+.w-large{width:260px;}
+
+/* signature */
+canvas{
+  border:1px solid #000;
+  width:100%;
+  height:80px;
+  touch-action:none;
+}
+.clear{
+  font-size:11px;
+  color:blue;
+  cursor:pointer;
+  margin-top:3px;
+}
+
+/* print */
+@media print{
+  body{background:#fff;}
+  button{display:none;}
+}
 </style>
 </head>
 
@@ -26,132 +78,153 @@ canvas{border:1px solid #000;width:100%;height:80px;touch-action:none;}
 <div class="sheet">
 <h2>TRIP SHEET</h2>
 
-<!-- BASIC DETAILS -->
+<!-- HEADER -->
 <table>
 <tr>
-<td><label>Service City</label><input></td>
-<td><label>Organisation</label><input></td>
-<td><label>Guest Name</label><input></td>
+  <td class="w-medium"><label>Service City</label><input></td>
+  <td class="w-large"><label>Organisation</label><input></td>
+  <td><label>Guest Name</label><input></td>
 </tr>
 <tr>
-<td><label>DS No</label><input></td>
-<td><label>Booking ID</label><input></td>
-<td><label>Reporting Address</label><input></td>
+  <td class="w-small"><label>DS No</label><input></td>
+  <td class="w-small"><label>Booking ID</label><input></td>
+  <td><label>Reporting Address</label><input></td>
 </tr>
 </table>
 
 <!-- START / CLOSE -->
 <table>
 <tr>
-<td><label>Starting Date</label><input type="date" id="sDate" oninput="calcDays()"></td>
-<td><label>Starting Time</label><input type="time" id="startTime" oninput="calcHrs()"></td>
-<td><label>Starting KM</label><input type="number" id="startKm" oninput="calcKm()"></td>
+  <td class="w-small"><label>Starting Date</label><input type="date"></td>
+  <td class="w-small"><label>Starting Time</label><input type="time" id="startTime" oninput="calcHrs()"></td>
+  <td class="w-small"><label>Starting KM</label><input type="number" id="startKm" oninput="calcKm()"></td>
 </tr>
 <tr>
-<td><label>Closing Date</label><input type="date" id="eDate" oninput="calcDays()"></td>
-<td><label>Closing Time</label><input type="time" id="closeTime" oninput="calcHrs()"></td>
-<td><label>Closing KM</label><input type="number" id="closeKm" oninput="calcKm()"></td>
+  <td class="w-small"><label>Closing Date</label><input type="date"></td>
+  <td class="w-small"><label>Closing Time</label><input type="time" id="closeTime" oninput="calcHrs()"></td>
+  <td class="w-small"><label>Closing KM</label><input type="number" id="closeKm" oninput="calcKm()"></td>
 </tr>
 </table>
 
-<!-- VEHICLE DETAILS -->
+<!-- VEHICLE -->
 <table>
 <tr>
-<td><label>Reporting Time</label><input type="time"></td>
-<td><label>Car Booked</label><input></td>
-<td><label>Car Allotted</label><input></td>
+  <td><label>Reporting Time</label><input type="time"></td>
+  <td><label>Car Booked</label><input></td>
+  <td><label>Car Allotted</label><input></td>
 </tr>
 <tr>
-<td><label>Chauffeur Name</label><input></td>
-<td><label>Chauffeur Mobile No</label><input type="tel"></td>
-<td><label>Car No</label><input></td>
+  <td><label>Chauffeur Name</label><input></td>
+  <td><label>Mobile No</label><input></td>
+  <td><label>Car No</label><input></td>
 </tr>
 </table>
 
-<!-- TOTALS -->
+<!-- TOTAL -->
 <table>
 <tr>
-<td><label>Total Days</label><input id="totalDays" readonly></td>
-<td><label>Total Hrs</label><input id="totalHrs" readonly></td>
-<td><label>Total KM</label><input id="totalKm" readonly></td>
+  <td><label>Total Days</label><input></td>
+  <td><label>Total Hrs</label><input id="totalHrs" readonly></td>
+  <td><label>Total KM</label><input id="totalKm" readonly></td>
 </tr>
 </table>
 
-<!-- SIGNATURE -->
+<!-- ROUTE -->
 <table>
 <tr>
-<td width="50%">
-<label>Guest Signature</label>
-<input placeholder="Type Guest Name">
-<canvas id="guestSign"></canvas>
-<div class="clear" onclick="clearCanvas('guestSign')">Clear</div>
-</td>
-
-<td width="50%">
-<label>Chauffeur Signature</label>
-<input placeholder="Type Chauffeur Name">
-<canvas id="driverSign"></canvas>
-<div class="clear" onclick="clearCanvas('driverSign')">Clear</div>
-</td>
+  <td><label>Routing Details</label><textarea rows="3"></textarea></td>
+  <td><label>Parking & Toll / Interstate Taxes</label><textarea rows="3"></textarea></td>
 </tr>
 </table>
 
-<p style="font-size:11px">
+<!-- SIGNATURES -->
+<table>
+<tr>
+  <td width="50%">
+    <label>Guest Signature (Type or Draw)</label>
+    <input placeholder="Type Guest Name">
+    <div style="text-align:center;font-size:11px">OR</div>
+    <canvas id="guestSign"></canvas>
+    <div class="clear" onclick="clearCanvas('guestSign')">Clear Signature</div>
+  </td>
+
+  <td width="50%">
+    <label>Chauffeur Signature (Type or Draw)</label>
+    <input placeholder="Type Chauffeur Name">
+    <div style="text-align:center;font-size:11px">OR</div>
+    <canvas id="driverSign"></canvas>
+    <div class="clear" onclick="clearCanvas('driverSign')">Clear Signature</div>
+  </td>
+</tr>
+</table>
+
+<p style="font-size:11px;margin-top:5px">
 I confirm that I am responsible for full payment of this bill if not paid by the organisation.
 </p>
 
-<button onclick="savePDF()" style="width:100%;padding:8px;margin-top:10px">
-Sign → Save → Create PDF Link
+<button onclick="window.print()" style="width:100%;padding:8px;margin-top:10px">
+Print Trip Sheet
 </button>
 
-<div id="pdfLink" style="margin-top:10px;font-size:13px;"></div>
 </div>
-
-<!-- PDF LIB -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
 function calcKm(){
-  let s=+startKm.value||0;
-  let e=+closeKm.value||0;
-  totalKm.value = e>=s ? e-s : 0;
+  let s=Number(startKm.value)||0;
+  let e=Number(closeKm.value)||0;
+  totalKm.value=e>=s?e-s:0;
 }
 
 function calcHrs(){
   if(!startTime.value||!closeTime.value) return;
   let [sh,sm]=startTime.value.split(':').map(Number);
   let [eh,em]=closeTime.value.split(':').map(Number);
-  let s=sh*60+sm,e=eh*60+em;
-  if(e<s) e+=1440;
-  let d=e-s;
-  totalHrs.value=Math.floor(d/60)+"h "+(d%60)+"m";
+  let start=sh*60+sm,end=eh*60+em;
+  if(end<start) end+=1440;
+  let diff=end-start;
+  totalHrs.value=Math.floor(diff/60)+"h "+(diff%60)+"m";
 }
 
-function calcDays(){
-  if(!sDate.value||!eDate.value) return;
-  let sd=new Date(sDate.value);
-  let ed=new Date(eDate.value);
-  totalDays.value=Math.floor((ed-sd)/(1000*60*60*24))+1;
-}
-
-/* SIGN */
+/* DRAW SIGNATURE (MOUSE + TOUCH) */
 function initSign(id){
-  const c=document.getElementById(id);
-  const ctx=c.getContext("2d");
-  let draw=false;
+  const canvas=document.getElementById(id);
+  const ctx=canvas.getContext("2d");
+  let drawing=false;
 
-  function pos(e){
-    const r=c.getBoundingClientRect();
-    return e.touches?
-      {x:e.touches[0].clientX-r.left,y:e.touches[0].clientY-r.top}:
-      {x:e.clientX-r.left,y:e.clientY-r.top};
+  function getPos(e){
+    const r=canvas.getBoundingClientRect();
+    if(e.touches){
+      return {x:e.touches[0].clientX-r.left,y:e.touches[0].clientY-r.top};
+    }
+    return {x:e.clientX-r.left,y:e.clientY-r.top};
   }
-  c.onmousedown=e=>{draw=true;let p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);}
-  c.onmousemove=e=>{if(!draw)return;let p=pos(e);ctx.lineWidth=2;ctx.lineCap="round";ctx.lineTo(p.x,p.y);ctx.stroke();}
-  c.onmouseup=()=>draw=false;
-  c.ontouchstart=e=>{draw=true;let p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);}
-  c.ontouchmove=e=>{e.preventDefault();if(!draw)return;let p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();}
-  c.ontouchend=()=>draw=false;
+
+  function start(e){
+    drawing=true;
+    const p=getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(p.x,p.y);
+  }
+
+  function draw(e){
+    if(!drawing) return;
+    const p=getPos(e);
+    ctx.lineWidth=2;
+    ctx.lineCap="round";
+    ctx.lineTo(p.x,p.y);
+    ctx.stroke();
+  }
+
+  function stop(){ drawing=false; }
+
+  canvas.addEventListener("mousedown",start);
+  canvas.addEventListener("mousemove",draw);
+  canvas.addEventListener("mouseup",stop);
+  canvas.addEventListener("mouseleave",stop);
+
+  canvas.addEventListener("touchstart",start);
+  canvas.addEventListener("touchmove",e=>{e.preventDefault();draw(e);});
+  canvas.addEventListener("touchend",stop);
 }
 
 initSign("guestSign");
@@ -160,19 +233,6 @@ initSign("driverSign");
 function clearCanvas(id){
   const c=document.getElementById(id);
   c.getContext("2d").clearRect(0,0,c.width,c.height);
-}
-
-/* PDF + LINK */
-function savePDF(){
-  const sheet=document.querySelector(".sheet");
-  html2pdf().from(sheet).outputPdf('blob').then(blob=>{
-    const url=URL.createObjectURL(blob);
-    pdfLink.innerHTML=`
-      <b>PDF Link Created:</b><br>
-      <a href="${url}" target="_blank">Open Trip Sheet</a><br>
-      <a href="${url}" download="Trip_Sheet.pdf">Download PDF</a>
-    `;
-  });
 }
 </script>
 
