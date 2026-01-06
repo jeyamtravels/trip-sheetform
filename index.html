@@ -9,42 +9,56 @@
 body{
   font-family: Arial, sans-serif;
   background:#f2f2f2;
-  padding:10px;
+  padding:5px;
 }
+
 .sheet{
   max-width:900px;
   margin:auto;
   background:#fff;
   border:2px solid #000;
-  padding:10px;
+  padding:6px;
 }
+
 h2{
   text-align:center;
-  letter-spacing:2px;
-  margin:5px 0 10px;
+  letter-spacing:1px;
+  margin:2px 0 6px;
+  font-size:16px;
 }
+
 table{
   width:100%;
   border-collapse:collapse;
-  font-size:13px;
+  font-size:12px;
 }
+
 td{
   border:1px solid #000;
-  padding:5px;
+  padding:3px;
   vertical-align:top;
 }
+
 label{
   font-weight:bold;
-  font-size:12px;
+  font-size:11px;
   display:block;
+  margin-bottom:1px;
 }
+
 input, textarea{
   width:100%;
   border:none;
   outline:none;
-  font-size:13px;
+  font-size:12px;
+  padding:1px 0;
 }
-textarea{ resize:none; }
+
+textarea{
+  resize:none;
+  line-height:1.2;
+}
+
 
 /* fixed widths */
 .w-small{width:120px;}
@@ -55,9 +69,11 @@ textarea{ resize:none; }
 canvas{
   border:1px solid #000;
   width:100%;
-  height:80px;
+  height:55px;   /* was 80px */
   touch-action:none;
 }
+
+
 .clear{
   font-size:11px;
   color:blue;
@@ -67,9 +83,17 @@ canvas{
 
 /* print */
 @media print{
+    @page{
+        margin:6mm;
+    }
+    body{margin:0};
   body{background:#fff;}
   button{display:none;}
+  h2{font-size:14px;margin:2px 0;}
+  td{padding:2px;}
+  canvas{height:45px;}
 }
+
 </style>
 </head>
 
@@ -141,14 +165,14 @@ canvas{
 <table>
 <tr>
   <td width="50%">
-    <label>Guest Signature</label>
+    <label>Guest Signature </label>
     <canvas id="guestSign"></canvas>
     <div class="clear" onclick="clearCanvas('guestSign')">Clear Signature</div>
   </td>
 
   <td width="50%">
     <label>Chauffeur Signature </label>
-    <canvas id="driverSign"></canvas>
+   <canvas id="driverSign"></canvas>
     <div class="clear" onclick="clearCanvas('driverSign')">Clear Signature</div>
   </td>
 </tr>
@@ -158,7 +182,7 @@ canvas{
 I confirm that I am responsible for full payment of this bill if not paid by the organisation.
 </p>
 
-<button onclick="window.print()" style="width:100%;padding:8px;margin-top:10px">
+<button onclick="window.print()" style="width:100%;padding:5px;margin-top:6px">
 Print Trip Sheet
 </button>
 
@@ -185,34 +209,35 @@ function calcHrs(){
 function initSign(id){
   const canvas=document.getElementById(id);
   const ctx=canvas.getContext("2d");
-  let drawing=false;
+   /* FIX CANVAS SCALE */
+  canvas.width  = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+
+  let drawing = false;
 
   function getPos(e){
-    const r=canvas.getBoundingClientRect();
-    if(e.touches){
-      return {x:e.touches[0].clientX-r.left,y:e.touches[0].clientY-r.top};
-    }
-    return {x:e.clientX-r.left,y:e.clientY-r.top};
+    const r = canvas.getBoundingClientRect();
+    const t = e.touches ? e.touches[0] : e;
+    return { x: t.clientX - r.left, y: t.clientY - r.top };
   }
 
   function start(e){
-    drawing=true;
-    const p=getPos(e);
+    drawing = true;
+    const p = getPos(e);
     ctx.beginPath();
-    ctx.moveTo(p.x,p.y);
+    ctx.moveTo(p.x, p.y);
   }
 
   function draw(e){
     if(!drawing) return;
-    const p=getPos(e);
-    ctx.lineWidth=2;
-    ctx.lineCap="round";
-    ctx.lineTo(p.x,p.y);
+    const p = getPos(e);
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+    ctx.lineTo(p.x, p.y);
     ctx.stroke();
   }
 
-  function stop(){ drawing=false; }
-
+  function stop(){ drawing = false; }
   canvas.addEventListener("mousedown",start);
   canvas.addEventListener("mousemove",draw);
   canvas.addEventListener("mouseup",stop);
