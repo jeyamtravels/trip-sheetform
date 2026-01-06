@@ -6,101 +6,94 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-<style>
 body{
   font-family: Arial, sans-serif;
   background:#f2f2f2;
   padding:5px;
 }
 
-/* Main sheet */
 .sheet{
-  max-width:100%;
+  max-width:900px;
   margin:auto;
   background:#fff;
   border:2px solid #000;
-  padding:12px;
-
-  transform: scale(0.9);        /* 🔽 scale down equally */
-  transform-origin: top center; /* keep centered */
+  padding:6px;
 }
 
-/* Heading */
 h2{
   text-align:center;
   letter-spacing:1px;
   margin:2px 0 6px;
-  font-size:18px;
+  font-size:16px;
 }
 
-/* Tables */
 table{
   width:100%;
   border-collapse:collapse;
   font-size:12px;
-  margin-bottom:4px;
 }
 
 td{
   border:1px solid #000;
-  padding:3px 4px;   /* 🔻 reduced */
+  padding:3px;
   vertical-align:top;
 }
 
-/* Labels */
 label{
   font-weight:bold;
   font-size:11px;
   display:block;
-  margin-bottom:2px;
+  margin-bottom:1px;
 }
 
-/* Inputs */
 input, textarea{
   width:100%;
   border:none;
   outline:none;
   font-size:12px;
-  height:18px;      /* 🔻 reduced */
+  padding:1px 0;
 }
 
-textarea{ resize:none; }
+textarea{
+  resize:none;
+  line-height:1.2;
+}
+
 
 /* fixed widths */
-.w-small{width:220px;}
-.w-medium{width:180px;}
+.w-small{width:120px;}
+.w-medium{width:160px;}
 .w-large{width:260px;}
 
-/* Signature */
+/* signature */
 canvas{
   border:1px solid #000;
   width:100%;
-  height:60px;      /* 🔻 reduced */
+  height:55px;   /* was 80px */
   touch-action:none;
 }
 
+
 .clear{
-  font-size:10px;
-  margin-top:2px;
+  font-size:11px;
+  color:blue;
+  cursor:pointer;
+  margin-top:3px;
 }
 
-/* Buttons */
-button{
-  padding:6px;
-  font-size:13px;
-  margin-top:6px;
-}
-
-/* Print */
+/* print */
 @media print{
+    @page{
+        margin:6mm;
+    }
+    body{margin:0};
   body{background:#fff;}
   button{display:none;}
-  .sheet{
-    transform: scale(0.85);
-    transform-origin: top left;
-  }
+  h2{font-size:14px;margin:2px 0;}
+  td{padding:2px;}
+  canvas{height:45px;}
 }
-}
+
 </style>
 </head>
 
@@ -112,21 +105,21 @@ button{
 <!-- HEADER -->
 <table>
 <tr>
-  <td class="w-medium"><label>Service City</label><input></td>
-  <td class="w-large"><label>Organisation</label><input></td>
-  <td><label>Guest Name</label><input></td>
+  <td class="w-medium"><label>ServiceCity</label><input id="serviceCity"></td>
+  <td class="w-large"><label>Organisation</label><input id="organisation"></td>
+  <td><label>Guest Name</label><input id="guestName"></td>
 </tr>
 <tr>
-  <td class="w-small"><label>DS No</label><input></td>
-  <td class="w-small"><label>Booking ID</label><input></td>
-  <td><label>Reporting Address</label><input></td>
+  <td class="w-small"><label>DS No</label><input id="dsNo"></td>
+  <td class="w-small"><label>Booking ID</label><input id="bookingId"></td>
+  <td><label>Reporting Address</label><input id="reportingAddress"></td>
 </tr>
 </table>
 
 <!-- START / CLOSE -->
 <table>
 <tr>
-  <td class="w-small"><label>Starting Date</label><input type="date"></td>
+  <td class="w-small"><label>Starting Date</label><input type="date" id="startDate"></td>
   <td class="w-small"><label>Starting Time</label><input type="time" id="startTime" oninput="calcHrs()"></td>
   <td class="w-small"><label>Starting KM</label><input type="number" id="startKm" oninput="calcKm()"></td>
 </tr>
@@ -140,14 +133,14 @@ button{
 <!-- VEHICLE -->
 <table>
 <tr>
-  <td><label>Reporting Time</label><input type="time"></td>
-  <td><label>Car Booked</label><input></td>
-  <td><label>Car Allotted</label><input></td>
+  <td><label>Reporting Time</label><input type="time" id="reportingAddress"></td>
+  <td><label>Car Booked</label><input id="carBooked"></td>
+  <td><label>Car Allotted</label><input id="carAllotted"></td>
 </tr>
 <tr>
-  <td><label>Chauffeur Name</label><input></td>
-  <td><label>Mobile No</label><input></td>
-  <td><label>Car No</label><input></td>
+  <td><label>Chauffeur Name</label><input id="chauffeurName"></td>
+  <td><label>Mobile No</label><input id="mobileNo"></td>
+  <td><label>Car No</label><input id="carNo"></td>
 </tr>
 </table>
 
@@ -172,14 +165,14 @@ button{
 <table>
 <tr>
   <td width="50%">
-    <label>Guest Signature</label>
+    <label>Guest Signature </label>
     <canvas id="guestSign"></canvas>
     <div class="clear" onclick="clearCanvas('guestSign')">Clear Signature</div>
   </td>
 
   <td width="50%">
     <label>Chauffeur Signature </label>
-    <canvas id="driverSign"></canvas>
+   <canvas id="driverSign"></canvas>
     <div class="clear" onclick="clearCanvas('driverSign')">Clear Signature</div>
   </td>
 </tr>
@@ -188,15 +181,15 @@ button{
 <p style="font-size:11px;margin-top:5px">
 I confirm that I am responsible for full payment of this bill if not paid by the organisation.
 </p>
-
-<button onclick="window.print()" style="width:100%;padding:8px;margin-top:10px">
+<button onclick="saveTrip()">Save Trip Sheet</button>
+<button onclick="window.print()" style="width:100%;padding:5px;margin-top:6px">
 Print Trip Sheet
 </button>
 
 </div>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwrNM7d17OCMxUMZf6yztohxEwnKBL9EL8ne_Goke3ojnqXjBJkGqDw5_aPe9Jv0GhX/exec";
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyCUyAQ1QI3k-K4FIrn_3jCUe3ay1DTjG281CiBNvkCt1G8mtzEAOsvQRGM-8ksDBY4/execPASTE_YOUR_WEB_APP_URL_HERE";
 
 function calcKm(){
   let s=Number(startKm.value)||0;
@@ -213,39 +206,85 @@ function calcHrs(){
   let diff=end-start;
   totalHrs.value=Math.floor(diff/60)+"h "+(diff%60)+"m";
 }
+function val(id){
+  return document.getElementById(id)?.value || "";
+}
+function saveTrip(){
+  const data = {
+   serviceCity: val("serviceCity"),
+    organisation: val("organisation"),
+    guestName: val("guestName"),
+    dsNo: val("dsNo"),
+    bookingId: val("bookingId"),
+    reportingAddress: val("reportingAddress"),
+
+    startDate: val("startDate"),
+    startTime: val("startTime"),
+    startKm: val("startKm"),
+
+    closeDate: val("closeDate"),
+    closeTime: val("closeTime"),
+    closeKm: val("closeKm"),
+
+    reportingTime: val("reportingTime"),
+    carBooked: val("carBooked"),
+    carAllotted: val("carAllotted"),
+
+    chauffeurName: val("chauffeurName"),
+    mobileNo: val("mobileNo"),
+    carNo: val("carNo"),
+
+    totalDays: val("totalDays"),
+    totalHrs: val("totalHrs"),
+    totalKm: val("totalKm"),
+
+    routing: val("routing"),
+    parking: val("parking")
+  };
+  fetch(WEB_APP_URL,{
+    method:"POST",
+    body:JSON.stringify(data)
+  })
+  .then(()=>alert("Trip Sheet Saved Successfully ✅"))
+   .catch(err=>{
+    console.error(err);
+    alert("Save Failed ❌");
+  });
+}
 
 /* DRAW SIGNATURE (MOUSE + TOUCH) */
 function initSign(id){
   const canvas=document.getElementById(id);
   const ctx=canvas.getContext("2d");
-  let drawing=false;
+   /* FIX CANVAS SCALE */
+  canvas.width  = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+
+  let drawing = false;
 
   function getPos(e){
-    const r=canvas.getBoundingClientRect();
-    if(e.touches){
-      return {x:e.touches[0].clientX-r.left,y:e.touches[0].clientY-r.top};
-    }
-    return {x:e.clientX-r.left,y:e.clientY-r.top};
+    const r = canvas.getBoundingClientRect();
+    const t = e.touches ? e.touches[0] : e;
+    return { x: t.clientX - r.left, y: t.clientY - r.top };
   }
 
   function start(e){
-    drawing=true;
-    const p=getPos(e);
+    drawing = true;
+    const p = getPos(e);
     ctx.beginPath();
-    ctx.moveTo(p.x,p.y);
+    ctx.moveTo(p.x, p.y);
   }
 
   function draw(e){
     if(!drawing) return;
-    const p=getPos(e);
-    ctx.lineWidth=2;
-    ctx.lineCap="round";
-    ctx.lineTo(p.x,p.y);
+    const p = getPos(e);
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+    ctx.lineTo(p.x, p.y);
     ctx.stroke();
   }
 
-  function stop(){ drawing=false; }
-
+  function stop(){ drawing = false; }
   canvas.addEventListener("mousedown",start);
   canvas.addEventListener("mousemove",draw);
   canvas.addEventListener("mouseup",stop);
@@ -262,41 +301,6 @@ initSign("driverSign");
 function clearCanvas(id){
   const c=document.getElementById(id);
   c.getContext("2d").clearRect(0,0,c.width,c.height);
-}
-function saveToSheet(){
-  const data = {
-    serviceCity: serviceCity.value,
-    organisation: organisation.value,
-    guestName: guestName.value,
-    dsNo: dsNo.value,
-    bookingId: bookingId.value,
-    reportingAddress: reportingAddress.value,
-    startDate: startDate.value,
-    startTime: startTime.value,
-    startKm: startKm.value,
-    closeDate: closeDate.value,
-    closeTime: closeTime.value,
-    closeKm: closeKm.value,
-    reportingTime: reportingTime.value,
-    carBooked: carBooked.value,
-    carAllotted: carAllotted.value,
-    chauffeurName: chauffeurName.value,
-    mobileNo: mobileNo.value,
-    carNo: carNo.value,
-    totalDays: totalDays.value,
-    totalHrs: totalHrs.value,
-    totalKm: totalKm.value,
-    routingDetails: routingDetails.value,
-    parkingToll: parkingToll.value
-  };
-
-  fetch(SCRIPT_URL,{
-    method:"POST",
-    body:JSON.stringify(data)
-  })
-  .then(res=>res.json())
-  .then(()=>alert("Trip Sheet Saved Successfully ✅"))
-  .catch(()=>alert("Error Saving ❌"));
 }
 </script>
 
