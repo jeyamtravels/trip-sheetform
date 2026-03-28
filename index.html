@@ -38,6 +38,13 @@ td{
   padding:3px;
   vertical-align:top;
 }
+  select{
+  width:100%;
+  border:none;
+  outline:none;
+  font-size:12px;
+  background:transparent;
+}
 
 label{
   font-weight:bold;
@@ -112,6 +119,14 @@ canvas{
 <tr>
   <td class="w-small"><label>DS No</label><input></td>
   <td class="w-medium"><label>Booking ID</label><input></td>
+   <td class="w-medium">
+    <label>Package Type</label>
+    <select style="width:100%;border:none;outline:none;font-size:12px;">
+      <option value="">Select</option>
+      <option value="Local">Local</option>
+      <option value="Outstation">Outstation</option>
+    </select>
+  </td>
   <td class="w-large"><label>Reporting Address</label><input></td>
 </tr>
 </table>
