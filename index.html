@@ -62,10 +62,13 @@ input, textarea{
 }
 
 textarea{
+  width:100%;
+  border:none;
+  outline:none;
+  font-size:12px;
   resize:none;
-  line-height:1.2;
+  line-height:1.3;
 }
-
 
 /* fixed widths */
 .w-small{width:110px;}
@@ -128,7 +131,10 @@ canvas{
       <option value="Outstation">Outstation</option>
     </select>
   </td>
-  <td class="w-large"><label>Reporting Address</label><input></td>
+ <td class="w-large">
+  <label>Reporting Address</label>
+  <textarea rows="2" placeholder="Enter full address"></textarea>
+</td>
 </tr>
 </table>
 
