@@ -188,9 +188,34 @@ Print Trip Sheet
 
 </div>
 
-<script>
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyCUyAQ1QI3k-K4FIrn_3jCUe3ay1DTjG281CiBNvkCt1G8mtzEAOsvQRGM-8ksDBY4/execPASTE_YOUR_WEB_APP_URL_HERE";
+ <script>
+const api = "https://script.google.com/macros/s/AKfycbyGf013wPwSFft46rqtAF3crIDST_0qECCtVGxNgrc2KXadlFwrfnbR0GM8891OJfeg/exec";
 
+const bookingId = new URLSearchParams(location.search).get("bookingId");
+
+if (bookingId) {
+  fetch(api + "?bookingId=" + encodeURIComponent(bookingId))
+    .then(r => r.json())
+    .then(d => {
+      if (!d.status) {
+        alert(d.message);
+        return;
+      }
+
+      document.getElementById("company").value = d.company || "";
+      document.getElementById("guestName").value = d.guestName || "";
+      document.getElementById("mobile").value = d.mobile || "";
+      document.getElementById("bookingId").value = d.bookingId || "";
+      document.getElementById("dsNo").value = d.dsNo || "";
+      document.getElementById("address").value = d.address || "";
+      document.getElementById("reportingTime").value = d.reportingTime || "";
+      document.getElementById("cabType").value = d.cabType || "";
+      document.getElementById("cabNo").value = d.cabNo || "";
+      document.getElementById("driverName").value = d.driverName || "";
+      document.getElementById("driverMobile").value = d.driverMobile || "";
+    });
+}
+</script>
 function calcKm(){
   let s=Number(startKm.value)||0;
   let e=Number(closeKm.value)||0;
