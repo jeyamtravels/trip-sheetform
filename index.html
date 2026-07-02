@@ -126,19 +126,21 @@ canvas{
   <td class="w-medium"><label>Booking ID</label><input id="bookingId"></td>
    <td class="w-small">
     <label>Package Type</label>
-    <select style="width:100%;border:none;outline:none;font-size:12px;">
-      <option value="">Select</option>
-      <option value="Local">Local</option>
-       <option value="Local">Local 4hrs40km</option>
-       <option value="Local">Local 6hrs60km</option>
-       <option value="Local">Local 8hrs80km</option>
-       <option value="Local">Local 12hrs120km</option>
-        <option value="Outstation">Outstation</option>
+     <select id="packageType">
+    
+    <option value="">Select</option>
+<option value="Local">Local</option>
+<option value="Local 4hrs40km">Local 4hrs40km</option>
+<option value="Local 6hrs60km">Local 6hrs60km</option>
+<option value="Local 8hrs80km">Local 8hrs80km</option>
+<option value="Local 12hrs120km">Local 12hrs120km</option>
+<option value="Outstation">Outstation</option>
     </select>
   </td>
  <td class="w-large">
   <label>Reporting Address</label>
-  <textarea rows="2" placeholder="Enter full address"></textarea>
+   <textarea id="address" rows="2" placeholder="Enter full address"></textarea>
+ 
 </td>
 </tr>
 </table>
@@ -206,6 +208,7 @@ canvas{
 <!-- ROUTE -->
 <table>
 <tr>
+  
   <td><label>Routing Details</label><textarea rows="3"></textarea></td>
   <td><label>Parking & Toll / Interstate Taxes</label><textarea rows="3"></textarea></td>
 </tr>
